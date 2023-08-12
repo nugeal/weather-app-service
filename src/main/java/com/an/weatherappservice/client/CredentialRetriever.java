@@ -1,14 +1,15 @@
-package com.an.weatherappservice;
+package com.an.weatherappservice.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
+@Configuration
 public class CredentialRetriever {
     public String getSecret() throws JsonProcessingException {
 
@@ -29,8 +30,6 @@ public class CredentialRetriever {
         try {
             getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
         } catch (Exception e) {
-            // For a list of exceptions thrown, see
-            // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
             throw e;
         }
 
@@ -39,8 +38,6 @@ public class CredentialRetriever {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(secretString);
         JsonNode apiKey = root.path("openWeatherApiKey");
-        return apiKey.toString().replaceAll("\"","" );
-
-        // Your code goes here.
+        return apiKey.toString().replaceAll("\"","");
     }
 }
